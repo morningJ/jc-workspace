@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "--mybatismapper--" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.java.smart.mybatis.mapper.UserMapper">
+	
+	<resultMap type="com.java.smart.mybatis.model.User" id="userResultMap">
+		<id property="id" column="USER_ID" />
+		<result property="name" column="USER_NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="password" column="PASS_WORD" />
+		<result property="token" column="TOKEN" />
+		<result property="isDelete" column="IS_DELETE" />
+		<result property="permissions" column="PERMISSIONS" />
+	</resultMap>
+		
+	<!-- 根据用户id查询用户信息 -->
+	<select id="getUserInfoById" parameterType="java.lang.String" resultMap="userResultMap">
+		SELECT * FROM SMART_USER WHERE USER_ID = #{id}
+	</select>
+	
+	<select id="getAllUserInfo" resultMap="userResultMap">
+		SELECT * FROM SMART_USER
+	</select>
+	
+	<!--添加用户 -->
+	<insert id="allMenuList" parameterType="com.java.smart.mybatis.model.User" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO SMART_USER (
+		USER_ID,USER_NAME,PHONE,PASS_WORD,TOKEN,IS_DELETE,PERMISSIONS
+		) VALUES (
+		#{id},#{name},#{phone},#{password},#{token},#{isDelete},#{permissions}
+		)
+	</insert>
+	
+	<!-- 进行删除操作 -->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM SMART_USER WHERE USER_ID=#{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.java.smart.mybatis.model.User">
+		UPDATE SMART_USER
+		<!-- 动态的sql修改 -->
+		<set>
+			<!--test里面的值是你bean里面的变量名，而不是数据库中的字段名 -->
+			<if test="name!=null">
+				USER_NAME=#{name},
+			</if>
+			<if test="phone!=null">
+				PHONE=#{phone},
+			</if>
+			<if test="isDelete!=null">
+				IS_DELETE=#{isDelete},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+</mapper>

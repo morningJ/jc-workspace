@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "--mybatismapper--" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.java.smart.mybatis.mapper.ChannelMapper">
+
+    <resultMap  id="channelResultMap" type="com.java.smart.mybatis.model.Channel">
+        <id property="pk1" column="PK1" />
+        <result property="channelId" column="CHANNEL_ID" />
+        <result property="channelName" column="CHANNEL_NAME" />
+        <result property="channelEname" column="CHANNEL_ENAME" />
+        <result property="protocol" column="CHANNEL_PROTOCOL" />
+        <result property="messageType" column="MESSAGE_TYPE" />
+        <result property="reqUnicode" column="REQ_UNICODE" />
+        <result property="resUnicode" column="RES_UNICODE" />
+        <result property="port" column="PORT" />
+        <result property="contactName" column="CONTACT_NAME" />
+        <result property="contactPhone" column="CONTACT_PHONE" />
+        <result property="remark" column="REMARK" />
+        <result property="length" column="LENGTH" />
+    </resultMap>
+
+    <!-- 查询全部渠道信息 -->
+    <select id="getChannelList" resultMap="channelResultMap">
+        SELECT PK1, CHANNEL_ID, CHANNEL_NAME, CHANNEL_ENAME, CHANNEL_PROTOCOL, MESSAGE_TYPE, REQ_UNICODE, RES_UNICODE, PORT, CONTACT_NAME, CONTACT_PHONE, REMARK, LENGTH FROM SMART_CHANNEL
+    </select>
+
+    <!--根据主键id 查询单笔渠道信息-->
+    <select id="getChannelByPK1" parameterType="java.lang.String" resultMap="channelResultMap">
+        SELECT * FROM SMART_CHANNEL WHERE PK1 = #{pk1}
+    </select>
+
+    <!-- 根据条件查询渠道记录 -->
+    <select id="getChannelByConditions" parameterType="java.util.Map" resultMap="channelResultMap">
+
+        SELECT PK1, CHANNEL_ID, CHANNEL_NAME, CHANNEL_ENAME, CHANNEL_PROTOCOL,MESSAGE_TYPE, REQ_UNICODE, RES_UNICODE, PORT, CONTACT_NAME, CONTACT_PHONE, REMARK ,LENGTH FROM (
+
+        SELECT ROWNUM as num, PK1, CHANNEL_ID, CHANNEL_NAME, CHANNEL_ENAME, CHANNEL_PROTOCOL,MESSAGE_TYPE, REQ_UNICODE, RES_UNICODE, PORT, CONTACT_NAME, CONTACT_PHONE, REMARK, LENGTH
+        FROM SMART_CHANNEL WHERE 1=1
+        <if test="pk1!=null and pk1!=''">
+            AND PK1 = #{pk1}
+        </if>
+        <if test="channelId!=null and channelId!=''">
+            AND CHANNEL_ID = #{channelId}
+        </if>
+        <if test="channelName!=null">
+            AND CHANNEL_NAME=#{channelName}
+        </if>
+        <if test="channelEname!=null">
+            AND CHANNEL_ENAME=#{channelEname}
+        </if>
+        <if test="protocol!=null">
+            AND CHANNEL_PROTOCOL=#{protocol}
+        </if>
+        <if test="messageType!=null">
+            AND MESSAGE_TYPE=#{messageType}
+        </if>
+        <if test="reqUnicode!=null">
+            AND REQ_UNICODE=#{reqUnicode}
+        </if>
+        <if test="resUnicode!=null">
+            AND RES_UNICODE=#{resUnicode}
+        </if>
+        <if test="port!=null">
+            AND PORT=#{port}
+        </if>
+        <if test="contactName!=null">
+            AND CONTACT_NAME=#{contactName}
+        </if>
+        <if test="contactPhone!=null">
+            AND CONTACT_PHONE=#{contactPhone}
+        </if>
+        <if test="remark!=null">
+            AND REMARK=#{remark}
+        </if>
+
+     ) c WHERE c.num >= #{rowstart}
+    </select>
+
+    <!-- 根据条件查询条数-->
+    <select id="getCountByConditions" parameterType="java.util.Map" resultType="Integer">
+
+        SELECT count(*) FROM (
+
+        SELECT PK1 FROM SMART_CHANNEL WHERE 1=1
+        <if test="pk1!=null and pk1!=''">
+            AND PK1 = #{pk1}
+        </if>
+        <if test="channelId!=null and channelId!=''">
+            AND CHANNEL_ID = #{channelId}
+        </if>
+        <if test="channelName!=null">
+            AND CHANNEL_NAME=#{channelName}
+        </if>
+        <if test="channelEname!=null">
+            AND CHANNEL_ENAME=#{channelEname}
+        </if>
+        <if test="protocol!=null">
+            AND CHANNEL_PROTOCOL=#{protocol}
+        </if>
+        <if test="messageType!=null">
+            AND MESSAGE_TYPE=#{messageType}
+        </if>
+        <if test="reqUnicode!=null">
+            AND REQ_UNICODE=#{reqUnicode}
+        </if>
+        <if test="resUnicode!=null">
+            AND RES_UNICODE=#{resUnicode}
+        </if>
+        <if test="port!=null">
+            AND PORT=#{port}
+        </if>
+        <if test="contactName!=null">
+            AND CONTACT_NAME=#{contactName}
+        </if>
+        <if test="contactPhone!=null">
+            AND CONTACT_PHONE=#{contactPhone}
+        </if>
+        <if test="remark!=null">
+            AND REMARK=#{remark}
+        </if>
+        )
+    </select>
+
+    <!--添加用户 -->
+    <insert id="addChannel" parameterType="com.java.smart.mybatis.model.Channel" useGeneratedKeys="true" keyProperty="pk1">
+        INSERT INTO SMART_CHANNEL (
+        PK1, CHANNEL_ID, CHANNEL_NAME, CHANNEL_ENAME, CHANNEL_PROTOCOL,
+        MESSAGE_TYPE, REQ_UNICODE, RES_UNICODE, PORT, CONTACT_NAME, CONTACT_PHONE, REMARK, LENGTH
+        ) VALUES (
+        #{pk1},#{channelId},#{channelName},#{channelEname},#{protocol},#{messageType},#{reqUnicode},#{resUnicode},#{port},#{contactName},#{contactPhone},#{remark},#{length}
+        )
+    </insert>
+
+    <!-- 进行删除操作 -->
+    <delete id="deleteChannel" parameterType="java.lang.String">
+        DELETE FROM SMART_CHANNEL WHERE PK1 = #{pk1}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="updateChannelInfo" parameterType="com.java.smart.mybatis.model.Channel">
+        UPDATE SMART_CHANNEL
+        <!-- 动态的sql修改 -->
+        <set>
+            <if test="channelName!=null">
+                CHANNEL_NAME=#{channelName},
+            </if>
+            <if test="channelEname!=null">
+                CHANNEL_ENAME=#{channelEname},
+            </if>
+            <if test="protocol!=null">
+                CHANNEL_PROTOCOL=#{protocol},
+            </if>
+            <if test="messageType!=null">
+                MESSAGE_TYPE=#{messageType},
+            </if>
+            <if test="reqUnicode!=null">
+                REQ_UNICODE=#{reqUnicode},
+            </if>
+            <if test="resUnicode!=null">
+                RES_UNICODE=#{resUnicode},
+            </if>
+            <if test="port!=null">
+                PORT=#{port},
+            </if>
+            <if test="contactName!=null">
+                CONTACT_NAME=#{contactName},
+            </if>
+            <if test="contactPhone!=null">
+                CONTACT_PHONE=#{contactPhone},
+            </if>
+            <if test="remark!=null">
+                REMARK=#{remark},
+            </if>
+            <if test="length!=null">
+                LENGTH=#{length},
+            </if>
+        </set>
+        where PK1=#{pk1}
+    </update>
+
+    <select id="veriftChannel" parameterType="com.java.smart.mybatis.model.Channel" resultType="Integer">
+        SELECT COUNT(*) FROM SMART_CHANNEL WHERE
+            CHANNEL_ID = #{channelId} OR PORT=#{port}
+        <if test="channelName!=null">
+            OR CHANNEL_NAME=#{channelName}
+        </if>
+        <if test="channelEname!=null">
+            OR CHANNEL_ENAME=#{channelEname}
+        </if>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header">
+</head>
+<body>
+<section class="content table-content">
+    <h2 class="sub-header">渠道查询</h2>
+    <div class="form-group ">
+        <!-- ESB流水号，全局流水号，流水位置，响应状态，响应码，请求方，服务方 -->
+        <div class="input-group  col-md-12">
+            <div class="col-md-6">
+                <label for="channelId" class="col-md-3 control-label">渠道编号：</label>
+                <input id="channelId" type="text" class="col-md-5">
+            </div>
+            <div class="col-md-6">
+                <label for="channelName" class="col-md-3 control-label">渠道名称：</label>
+                <input id="channelName" type="text" class="col-md-5">
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div class="input-group  col-md-12">
+            <div class="col-md-6">
+                <label for="channelEname" class="col-md-3 control-label">渠道英文简称：</label>
+                <input id="channelEname" type="text" class="col-md-5">
+            </div>
+            <div class="col-md-6">
+                <label for="protocol" class="col-md-3 control-label">通讯协议：</label>
+                <input id="protocol" type="text" class="col-md-5">
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div class="input-group  col-md-12">
+            <div class="col-md-6">
+                <label for="messageType" class="col-md-3 control-label">报文格式：</label>
+                <input id="messageType" type="text" class="col-md-5">
+            </div>
+            <div class="col-md-6">
+                <label for="port" class="col-md-3 control-label">请求端口：</label>
+                <input id="port" type="text" class="col-md-5">
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div class="input-group  col-md-12">
+            <div class="col-md-6">
+                <button id="channelSelect" class="col-md-2  btn btn-default" type="button">查询</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8" id="toolbar"></div>
+    <div class="table-responsive">
+        <table id="channelRecords"
+               class="table table-bordered table-hover table-condensed flow-table-hover mon-table">
+        </table>
+    </div>
+</section>
+<div th:include="footer"></div>
+</body>
+<script th:src="@{/js/channel.js}"></script>
+</html>

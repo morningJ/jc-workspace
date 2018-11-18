@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "--mybatismapper--" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.java.smart.mybatis.mapper.MenuMapper">
+
+    <resultMap  id="menuResultMap" type="com.java.smart.mybatis.model.Menu">
+        <id property="pk1" column="PK1" />
+        <result property="menuId" column="MENU_ID" />
+        <result property="menuName" column="MENU_NAME" />
+        <result property="menuUrl" column="MENU_URL" />
+        <result property="menuImg" column="MENU_IMG" />
+        <result property="menuLevel" column="MENU_LEVEL" />
+        <result property="menuParentId" column="MENU_PARENTID" />
+        <result property="menuRole" column="MENU_ROLE" />
+        <result property="menuLimit" column="MENU_LIMIT" />
+    </resultMap>
+
+    <!-- 根据用户角色权限拉取用户菜单 -->
+    <select id="getMenuListByMenuRole" parameterType="java.lang.String" resultMap="menuResultMap">
+        SELECT * FROM SMART_MENU WHERE MENU_ROLE = #{menuRoleId}
+    </select>
+
+    <select id="getAllMenuList" parameterType="java.lang.String" resultMap="menuResultMap">
+        SELECT * FROM SMART_MENU WHERE MENU_ROLE = '0'
+    </select>
+
+    <!--添加菜单 -->
+    <insert id="addMenu" parameterType="com.java.smart.mybatis.model.Menu" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO SMART_MENU (
+        (PK1,MENU_ID,MENU_NAME,MENU_URL,MENU_IMG,MENU_LEVEL,MENU_PARENTID,MENU_ROLE,MENU_LIMIT)
+        ) VALUES (
+        #{pk1},#{menuId},#{menuName},#{menuUrl},#{menuImg},#{menuLevel},#{menuParentId},#{menuRole},#{menuLimit}
+        )
+    </insert>
+
+    <!-- 删除菜单 -->
+    <delete id="deleteMenu" parameterType="java.lang.String">
+        DELETE FROM SMART_MENU WHERE MENU_ID=#{menuId}
+        <if test="menuRoleId!=null and menuRoleId !='0'">
+            AND
+            MENU_ROLE >= #{menuRoleId}
+        </if>
+    </delete>
+
+</mapper>

@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:include="header">
+</head>
+<body>
+<section class="content">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" th:text="'渠道'+${#strings.isEmpty(channel.pk1)?'添加':'修改'}"></h3>
+                </div>
+                <div class="box-body">
+                    <form class="form-horizontal js-ajax-form" action="/channel/save" method="post">
+                        <input type="hidden" name="pk1" id="pk1" th:value="${channel.pk1}" />
+
+                        <div class="form-group">
+                            <label for="channelId" class="col-sm-2 control-label">渠道编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="channelId" required="required" th:readonly="${!#strings.equals(channel.channelId,null)}" class="form-control" id="channelId" th:value="${channel.channelId}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="channelName" class="col-sm-2 control-label">渠道名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="channelName" required="required" class="form-control" id="channelName" th:value="${channel.channelName}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="channelEname" class="col-sm-2 control-label">渠道英文简称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="channelEname" required="required" class="form-control" id="channelEname" th:value="${channel.channelEname}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="protocol" class="col-sm-2 control-label">通讯协议</label>
+                            <div class="col-sm-10">
+                                <select name="protocol" onclick="checkProtocol(this)" class="form-control" id="protocol">
+                                    <option th:selected="${#strings.equals(channel.protocol, 'HTTP')}" value="HTTP">HTTP</option>
+                                    <option th:selected="${#strings.equals(channel.protocol, 'TCP')}" value="TCP">TCP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div  id="headLength" class="form-group" th:hidden="${!#strings.equals(channel.protocol,'TCP')}">
+                            <label for="length" class="col-sm-2 control-label">报文头长度</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="length" class="form-control" id="length" th:value="${channel.length}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="messageType" class="col-sm-2 control-label">报文格式</label>
+                            <div class="col-sm-10">
+                                <select name="messageType"  class="form-control" id="messageType">
+                                    <option th:selected="${#strings.equals(channel.messageType, 'CD')}" value="CD">CD</option>
+                                    <option th:selected="${#strings.equals(channel.messageType, 'XML')}" value="XML">XML</option>
+                                    <option th:selected="${#strings.equals(channel.messageType, 'JSON')}" value="JSON">JSON</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reqUnicode" class="col-sm-2 control-label">请求字符集</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="reqUnicode" required="required" class="form-control" id="reqUnicode" th:value="${channel.reqUnicode}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resUnicode" class="col-sm-2 control-label">返回字符集</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="resUnicode" required="required" class="form-control" id="resUnicode" th:value="${channel.resUnicode}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="port" class="col-sm-2 control-label">请求端口</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="port" required="required" class="form-control" id="port" th:value="${channel.port}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactName" class="col-sm-2 control-label">联系人姓名</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="contactName" class="form-control" id="contactName" th:value="${channel.contactName}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone" class="col-sm-2 control-label">联系人电话</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="contactPhone" class="form-control" id="contactPhone" th:value="${channel.contactPhone}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remark" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="remark" class="form-control" id="remark" th:value="${channel.remark}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default js-ajax-submit" onclick="return channelSubmit()">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="footer"></div>
+</body>
+<script type="text/javascript">
+    function checkProtocol(obj){
+        var value = obj.value;
+        if(value == 'TCP'){
+            $("#headLength").show();
+        }else{
+            $("#headLength").hide();
+        }
+    }
+
+    function channelSubmit() {
+
+        var protocol = $("#protocol").val();
+        var length = $("#length").val();
+        if(protocol == 'TCP'){
+            if (length == null || length.length == 0) {
+             //   toastr.warning('TCP协议时报文头长度不能为空！');
+                layer.msg('TCP协议时报文头长度不能为空！', {icon: 2});
+                return false;
+            }
+        }
+
+    }
+</script>
+</html>
